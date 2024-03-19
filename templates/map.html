@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html class="use-all-space">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta charset="UTF-8" />
+    <title>My Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <!-- Replace version in the URL with desired library version -->
+    <link rel="stylesheet" type="text/css" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.7.2/maps/maps.css" />
+    <style>
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <!-- Replace version in the URL with desired library version -->
+    
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/5.x/5.68.0/maps/maps-web.min.js"></script>
+    <script>
+        tt.setProductInfo('YourAppName', '1.0');
+        tt.setKey('88U6EIt0pfb9wuMoSo0vC0BszxpaGb7f');  // Replace with your TomTom API key
+    </script>
+    <script>
+        // Get user's current location using Geolocation API
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+
+                var map = tt.map({
+                    key: '88U6EIt0pfb9wuMoSo0vC0BszxpaGb7f',  // Replace with your TomTom API key
+                    container: 'map',
+                    center: [longitude, latitude],
+                    zoom: 12
+                });
+
+                // Add a marker for the user's location
+                var marker = new tt.Marker().setLngLat([longitude, latitude]).addTo(map);
+            },
+            function (error) {
+                console.error('Error getting user location:', error);
+            }
+        );
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+ <!-- <p id="location"></p> -->
+  <script>
+    function displayLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+
+          // Display latitude and longitude
+          var locationText = document.getElementById('location');
+          locationText.innerText = `Latitude: ${latitude}, Longitude: ${longitude}`;
+
+          // Save location to the server
+          saveLocationToServer(latitude, longitude);
+        });
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+      }
+    }
+
+    function saveLocationToServer(latitude, longitude) {
+      fetch('/save_location', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ latitude: latitude, longitude: longitude }),
+      })
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error('Error:', error));
+    }
+
+    // Call the function to display location on page load
+    displayLocation();
+  </script>
+</body>
+</html>

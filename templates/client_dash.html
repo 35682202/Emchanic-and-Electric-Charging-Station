@@ -1,0 +1,141 @@
+{% extends "base_client.html" %}
+
+{% block title %}About Us - EMchanic{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div>
+            <h1>Welcome, {{ user.user_first_name }} {{ user.user_last_name }}</h1>
+            <h2>Specify your service</h2>
+        </div>
+        <div class="col-6 pt-3 mt-5 text-dark">
+            <button id="showChargingStationForm" class="btn btn-dark py-3 px-lg-2 d-none d-lg-block">Charging Station Around Me</button>
+        </div>
+        <div class="col-6 pt-3 text-dark">
+            <button id="showMechanicForm" class="btn btn-dark py-3 px-lg-2 d-none d-lg-block">Find Mechanic Around Me</button>
+        </div>
+    </div>
+
+    <!-- Popup Forms -->
+    <div id="chargingStationForm" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px;">
+            <form method="POST" action="/search_charging_station">
+<div class="col-md-6">
+    <label for="latitude" class="form-label">Current Latitude</label>
+    <input type="text" class="form-control" id="latitude" name="latitude" readonly>
+</div>
+<div class="col-md-6">
+    <label for="longitude" class="form-label">Current Longitude</label>
+    <input type="text" class="form-control" id="longitude" name="longitude" readonly>
+</div>
+    <button type="submit" class="btn btn-secondary">Submit</button>
+</form>
+            <button id="closeChargingStationForm" class="btn btn-secondary">Close</button>
+        </div>
+    </div>
+
+   <div id="mechanicForm" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px;">
+        <form method="POST" action="/search_mec">
+             <div class="col-md-6">
+                <label for="latitude" class="form-label">Current Latitude</label>
+                <input type="text" class="form-control" id="latitude" name="latitude" readonly>
+            </div>
+            <div class="col-md-6">
+                <label for="longitude" class="form-label">Current Longitude</label>
+                <input type="text" class="form-control" id="longitude" name="longitude" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="service_need">Specify your need</label>
+                <select class="form-select" id="service_need" name="service_need">
+                    <option selected>Specify your needs...</option>
+                    <option value="Repair Brakes">Repair Brakes</option>
+                    <option value="Replace Tire">Replace Tire</option>
+                    <option value="Renew Oil">Renew Oil</option>
+                    <option value="Minor Service">Minor Service</option>
+                    <option value="MOT">MOT</option>
+                    <option value="Air Conditioning Service">Air Conditioning Service</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="car_type">Type of car</label>
+                <select class="form-select" id="car_type" name="car_type">
+                    <option selected>Type of car...</option>
+                    <option value="BMW">BMW</option>
+                    <option value="Audi">Audi</option>
+                    <option value="Lexus">Lexus</option>
+                    <option value="Toyota">Toyota</option>
+                    <option value="Subaru">Subaru</option>
+                    <option value="Mercedes-Benz">Mercedes-Benz</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="car_model">Car Model</label>
+                <input type="text" class="form-control" id="car_model" name="car_model" placeholder="Car Model">
+            </div>
+            <div class="form-group">
+                <label for="car_service">Car Service</label>
+                <input type="text" class="form-control" id="car_service" name="car_service" placeholder="Car Service">
+            </div>
+            <button type="submit" class="btn btn-secondary">Submit</button>
+        </form>
+        <button id="closeMechanicForm" class="btn btn-secondary">Close</button>
+    </div>
+</div>
+
+    <!-- JavaScript to show/hide the forms based on button clicked -->
+    <script>
+    function displayLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+
+                // Fill latitude and longitude fields
+                document.getElementById('latitude').value = latitude;
+                document.getElementById('longitude').value = longitude;
+            });
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+    }
+
+    // Call the function to display location on page load
+    displayLocation();
+</script>
+    <script>
+        document.getElementById("showChargingStationForm").addEventListener("click", function () {
+            document.getElementById("chargingStationForm").style.display = "block";
+        });
+
+        document.getElementById("closeChargingStationForm").addEventListener("click", function () {
+            document.getElementById("chargingStationForm").style.display = "none";
+        });
+
+        document.getElementById("showMechanicForm").addEventListener("click", function () {
+            document.getElementById("mechanicForm").style.display = "block";
+        });
+
+        document.getElementById("closeMechanicForm").addEventListener("click", function () {
+            document.getElementById("mechanicForm").style.display = "none";
+        });
+    </script>
+      <script>
+        function showPosition(position) {
+            document.getElementById("latitude").value = position.coords.latitude;
+            document.getElementById("longitude").value = position.coords.longitude;
+        }
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Automatically get the user's current location on page load
+        window.onload = getLocation;
+    </script>
+{% endblock %}

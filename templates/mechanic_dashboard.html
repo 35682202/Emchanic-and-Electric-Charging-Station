@@ -1,0 +1,97 @@
+{% extends "base_client.html" %}
+
+{% block title %}About Us - EMchanic{% endblock %}
+
+{% block content %}
+ <h1>Login</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+ 
+
+    <p>Welcome, {{ mechanic.first_name }} {{ mechanic.last_name }}!</p>
+
+     <form action="{{ url_for('add_station') }}" method="post">
+        <label for="station_name">Station Name:</label><br>
+        <input type="text" id="station_name" name="station_name" required><br><br>
+
+        <label for="phone_number">Phone Number:</label><br>
+        <input type="tel" id="phone_number" name="phone_number" required><br><br>
+
+        <label for="alternative_contact">Alternative Contact:</label><br>
+        <input type="text" id="alternative_contact" name="alternative_contact" required><br><br>
+
+        <label for="address">Address:</label><br>
+        <textarea id="address" name="address" rows="4" cols="50" required></textarea><br><br>
+
+        <label for="license_number">License Number:</label><br>
+<input type="text" id="license_number" name="license_number" value="{{ mechanic.license_number }}" readonly><br><br>
+
+
+       <div class="col-md-6">
+        <label for="latitude" class="form-label">Latitude</label>
+        <input type="text" class="form-control" id="latitude" name="latitude" required readonly>
+    </div>
+    <div class="col-md-6">
+        <label for="longitude" class="form-label">Longitude</label>
+        <input type="text" class="form-control" id="longitude" name="longitude" required readonly>
+    </div>
+        <label for="zip_code">Zip Code:</label><br>
+        <input type="text" id="zip_code" name="zip_code" required><br><br>
+
+        <input type="checkbox" id="agree_terms" name="agree_terms" required>
+        <label for="agree_terms">I agree to the terms and conditions</label><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+    <div>
+        <h2>My charging stations</h2>
+        <table border="1">
+  <thead>
+    <tr>
+      <th>Station Name</th>
+      <th>Phone Number</th>
+      <th>Alternative Contact</th>
+      <th>Address</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Zip Code</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for station in stations %}
+    <tr>
+      <td>{{ station.station_name }}</td>
+      <td>{{ station.phone_number }}</td>
+      <td>{{ station.alternative_contact }}</td>
+      <td>{{ station.address }}</td>
+      <td>{{ station.latitude }}</td>
+      <td>{{ station.longitude }}</td>
+      <td>{{ station.zip_code }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+    </div>
+
+  <script>
+    // Fetch latitude and longitude from API and populate the corresponding input fields
+    window.onload = function() {
+        fetch('/get_coordinates?address=YOUR_ADDRESS')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('latitude').value = data.latitude;
+            document.getElementById('longitude').value = data.longitude;
+        })
+        .catch(error => console.error('Error:', error));
+    };
+</script>
+{% endblock %}
